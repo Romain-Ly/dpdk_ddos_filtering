@@ -53,7 +53,7 @@ SRCS-y += $(RTE_SRCDIR)/../dpdk_fdir_parser/src/fdir_yaml_parser.c
 CFLAGS += -I$(RTE_SRCDIR)/../dpdk_fdir_parser/include
 
 
-CFLAGS += -I$(RTE_SRCDIR)/../../lib/linux-ebpf-jit-dpdk
+CFLAGS += -I$(RTE_SRCDIR)/../linux-ebpf-jit-dpdk
 
 CFLAGS += -I$(RTE_SRCDIR)/include
 
