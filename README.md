@@ -13,6 +13,6 @@ dpdk-2-1.0t push -u origin master
 make clean && make
 
 ## environments :
-LD_LIBRARY_PATH="../linux_ebpf-jit"
+LD_LIBRARY_PATH="../linux_ebpf_jit"
 export LD_LIBRARY_PATH
 
