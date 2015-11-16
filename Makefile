@@ -19,7 +19,7 @@ LDLIBS += -lyaml
 LDLIBS += -lpcap
 
 #LDPATH += -L../../lib/linux-ebpf-jit
-LDLIBS += -L$(RTE_SRCDIR)/../../lib/linux-ebpf-jit/ -llinux-ebpf-jit
+LDLIBS += -L$(RTE_SRCDIR)/../linux-ebpf-jit/ -llinux-ebpf-jit
 
 
 # all source are stored in SRCS-y
