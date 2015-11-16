@@ -19,7 +19,7 @@ LDLIBS += -lyaml
 LDLIBS += -lpcap
 
 #LDPATH += -L../../lib/linux-ebpf-jit
-LDLIBS += -L$(RTE_SRCDIR)/../linux-ebpf-jit/ -llinux-ebpf-jit
+LDLIBS += -L$(RTE_SRCDIR)/../linux_ebpf_jit/ -llinux_ebpf_jit
 
 
 # all source are stored in SRCS-y
@@ -53,7 +53,7 @@ SRCS-y += $(RTE_SRCDIR)/../dpdk_fdir_parser/src/fdir_yaml_parser.c
 CFLAGS += -I$(RTE_SRCDIR)/../dpdk_fdir_parser/include
 
 
-CFLAGS += -I$(RTE_SRCDIR)/../linux-ebpf-jit-dpdk
+CFLAGS += -I$(RTE_SRCDIR)/../linux_ebpf_jit
 
 CFLAGS += -I$(RTE_SRCDIR)/include
 
