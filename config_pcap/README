@@ -1,0 +1,5 @@
+rules for config instrctions files for bpf pcap compiler :
+
+- no comments
+- all on 1 line
+- must end with a new line
