@@ -4,10 +4,10 @@ DDoS filtering application  on DPDK
 Comments under progressed
 
 ## dependencies (ubuntu 14.10 package)
-libgtk2.0-devbgtk2
-libyaml-dev
-libpcap-dev
-dpdk-2-1.0t push -u origin master
+- libgtk2.0-devbgtk2
+- libyaml-dev
+- libpcap-dev
+- dpdk-2-1.0
 
 ## How to 
 make clean && make
