@@ -8,6 +8,10 @@ Comments under progressed
 - libyaml-dev
 - libpcap-dev
 - dpdk-2-1.0
+- https://github.com/Romain-Ly/linux_ebpf_jit
+- https://github.com/Romain-Ly/dpdk_getflags_name
+- https://github.com/Romain-Ly/dpdk_fdir_parser
+- https://github.com/Romain-Ly/dpdk_getport_capabilities
 
 ## How to 
 make clean && make
