@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -95,14 +95,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;};</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//int compile_bpf_filter(__attribute__((unused)) void);</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">int</span>  compile_pcap_bpf_program(<span class="keyword">struct</span> <a class="code" href="structpcap__bpf__program.html">pcap_bpf_program</a> *pcap_bpf);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">int</span> BPF_pkt_filter(<span class="keywordtype">char</span> *pkt, uint32_t pkt_length);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">int</span> BPF_init(<span class="keywordtype">char</span> __attribute__((unused)) *tmp);</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">int</span>  <a class="code" href="engine__bpf_8c.html#a9ae9d809b54d0eae3b50472cec34d456">compile_pcap_bpf_program</a>(<span class="keyword">struct</span> <a class="code" href="structpcap__bpf__program.html">pcap_bpf_program</a> *pcap_bpf);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">int</span> <a class="code" href="engine__bpf_8c.html#a30b91e8761f1bb67e6e7803a29d5f5d3">BPF_pkt_filter</a>(<span class="keywordtype">char</span> *pkt, uint32_t pkt_length);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">int</span> <a class="code" href="engine__bpf_8c.html#acbab5bdff55694009f3916a6ded659f8">BPF_init</a>(<span class="keywordtype">char</span> __attribute__((unused)) *tmp);</div>
 <div class="ttc" id="structpcap__bpf__program_html"><div class="ttname"><a href="structpcap__bpf__program.html">pcap_bpf_program</a></div><div class="ttdef"><b>Definition:</b> engine_bpf.h:3</div></div>
+<div class="ttc" id="engine__bpf_8c_html_acbab5bdff55694009f3916a6ded659f8"><div class="ttname"><a href="engine__bpf_8c.html#acbab5bdff55694009f3916a6ded659f8">BPF_init</a></div><div class="ttdeci">int BPF_init(char __attribute__((unused))*tmp)</div><div class="ttdoc">bpf entry point (do nothing) </div><div class="ttdef"><b>Definition:</b> engine_bpf.c:265</div></div>
+<div class="ttc" id="engine__bpf_8c_html_a30b91e8761f1bb67e6e7803a29d5f5d3"><div class="ttname"><a href="engine__bpf_8c.html#a30b91e8761f1bb67e6e7803a29d5f5d3">BPF_pkt_filter</a></div><div class="ttdeci">int BPF_pkt_filter(char *pkt, uint32_t pkt_length)</div><div class="ttdoc">run bpf program </div><div class="ttdef"><b>Definition:</b> engine_bpf.c:253</div></div>
+<div class="ttc" id="engine__bpf_8c_html_a9ae9d809b54d0eae3b50472cec34d456"><div class="ttname"><a href="engine__bpf_8c.html#a9ae9d809b54d0eae3b50472cec34d456">compile_pcap_bpf_program</a></div><div class="ttdeci">int compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf)</div><div class="ttdoc">compile pcap expression to bytecode NOT USED HERE </div><div class="ttdef"><b>Definition:</b> engine_bpf.c:55</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 15 2015 13:42:31 for Anti-DDoS filtering application by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 17 2015 04:59:54 for Anti-DDoS filtering application by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

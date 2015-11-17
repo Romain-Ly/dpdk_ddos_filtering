@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -85,13 +85,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">main.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>main  
+<p>main file  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;main.h&quot;</code><br/>
 <code>#include &quot;bridge.h&quot;</code><br/>
@@ -114,13 +115,39 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a76bd2e6da54a0db0aafd120e2895a89f"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a76bd2e6da54a0db0aafd120e2895a89f">port_init</a> (uint8_t port_id, struct rte_mempool *mbuf_pool)</td></tr>
+<tr class="separator:a76bd2e6da54a0db0aafd120e2895a89f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f66301218b6205b24fbd21a2ebd96ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a5f66301218b6205b24fbd21a2ebd96ad">print_stats</a> (__attribute__((unused)) void)</td></tr>
 <tr class="separator:a5f66301218b6205b24fbd21a2ebd96ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90a9d17451b9ca326b90dcac3364484"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa90a9d17451b9ca326b90dcac3364484"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>print_port_stats</b> (__attribute__((unused)) void)</td></tr>
+<tr class="separator:aa90a9d17451b9ca326b90dcac3364484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eca3b75746b30ea36867254e24ee88b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6eca3b75746b30ea36867254e24ee88b">write_stats</a> (FILE *fp, uint64_t cumulative_tsc)</td></tr>
+<tr class="separator:a6eca3b75746b30ea36867254e24ee88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac68433e18ff2430e0e68817c3d9eea"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a6ac68433e18ff2430e0e68817c3d9eea">main_set_lcore_cfg</a> (unsigned lcore_id)</td></tr>
+<tr class="separator:a6ac68433e18ff2430e0e68817c3d9eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58d989d5fb38797b73250aaf5f393104"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a58d989d5fb38797b73250aaf5f393104">main_loop</a> (__attribute__((unused)) void)</td></tr>
+<tr class="separator:a58d989d5fb38797b73250aaf5f393104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af001f7b7faea723d97efa313b286071e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af001f7b7faea723d97efa313b286071e"></a>
+static struct rte_eth_conf&#160;</td><td class="memItemRight" valign="bottom"><b>port_conf_default</b></td></tr>
+<tr class="separator:af001f7b7faea723d97efa313b286071e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad230c236cdca66e59d50510fe7cb9882"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad230c236cdca66e59d50510fe7cb9882"></a>
+static const char *&#160;</td><td class="memItemRight" valign="bottom"><b>border</b> = &quot;==============================&quot;</td></tr>
+<tr class="separator:ad230c236cdca66e59d50510fe7cb9882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32af48f8af6945d0e2489b09d5960901"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32af48f8af6945d0e2489b09d5960901"></a>
+static const char *&#160;</td><td class="memItemRight" valign="bottom"><b>singleborder</b> = &quot;----------------------------&quot;</td></tr>
+<tr class="separator:a32af48f8af6945d0e2489b09d5960901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70c6bee988a2fb2cf81f778d1059c24a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70c6bee988a2fb2cf81f778d1059c24a"></a>
+static const char *&#160;</td><td class="memItemRight" valign="bottom"><b>indentation</b> = &quot; &quot;</td></tr>
+<tr class="separator:a70c6bee988a2fb2cf81f778d1059c24a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>main </p>
+<div class="textblock"><p>main file </p>
 <dl class="section author"><dt>Author</dt><dd>R. Ly </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a3c04138a5bfe5d72780bb7e82a18e627"></a>
@@ -157,6 +184,97 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a58d989d5fb38797b73250aaf5f393104"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void main_loop </td>
+          <td>(</td>
+          <td class="paramtype">__attribute__((unused))&#160;</td>
+          <td class="paramname"><em>void</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Main_loop </p>
+<p>statistics</p>
+<p>Main Loop</p>
+<p>Timer for printed stats</p>
+<p>Timer for logged stats</p>
+<p>check messages</p>
+<p>Check any slave need restart or recreate Need lock (threads)</p>
+
+</div>
+</div>
+<a class="anchor" id="a6ac68433e18ff2430e0e68817c3d9eea"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int main_set_lcore_cfg </td>
+          <td>(</td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>lcore_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Functions for Master process should be optimized </p>
+
+</div>
+</div>
+<a class="anchor" id="a76bd2e6da54a0db0aafd120e2895a89f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int port_init </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>port_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct rte_mempool *&#160;</td>
+          <td class="paramname"><em>mbuf_pool</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>useless</p>
+
+</div>
+</div>
 <a class="anchor" id="a5f66301218b6205b24fbd21a2ebd96ad"></a>
 <div class="memitem">
 <div class="memproto">
@@ -174,10 +292,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6eca3b75746b30ea36867254e24ee88b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void write_stats </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>fp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>cumulative_tsc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>write in csv fashion</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 15 2015 13:42:31 for Anti-DDoS filtering application by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 17 2015 04:59:54 for Anti-DDoS filtering application by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

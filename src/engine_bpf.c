@@ -1,88 +1,37 @@
+/**
+ * \file engine_bpf.c
+ * \brief bpf_engine
+ * \author R. Ly
+ *
+ * Compile pcap to bytecode  
+ */
 
 
 #include <filter.h>
 #include <stdint.h>
-
 #include "engine_bpf.h"
 
 
 /************************************/
-/**
- * STATIC DEF
- **/
+
 static const char border[11] = "**********";
 static const char subborder[11] = "   ---\n";
-
-
-
-/************************************/
 
 static struct bpf_prog *fp;
 
 
-/* struct bpf_prog { */
-/*   u32                     jited:1,        /\* Is our filter JIT'ed? *\/ */
-/*     len:31;         /\* Number of filter blocks *\/ */
-/*   struct sock_fprog_kern  *orig_prog;     /\* Original BPF program *\/ */
-/*   unsigned int            (*bpf_func)(const struct sk_buff *skb, */
-/* 				      const struct bpf_insn *filter); */
-/*   union { */
-/*     struct sock_filter      insns[0]; */
-/*     struct bpf_insn         insnsi[0]; */
-/*     /\* struct work_struct   work; *\/ */
-/*   }; */
-/* }; */
-
-
-
-/* static int  */
-/* compile_bpf_filter(__attribute__((unused)) void){ */
-/*   /\* From : tcpdump -i eth0 port 80 -dd *\/ */
-/*   struct sock_filter code[] = { */
-/*     { 0x28, 0, 0, 0x0000000c }, */
-/*     { 0x15, 0, 8, 0x000086dd }, */
-/*     { 0x30, 0, 0, 0x00000014 }, */
-/*     { 0x15, 2, 0, 0x00000084 }, */
-/*     { 0x15, 1, 0, 0x00000006 }, */
-/*     { 0x15, 0, 17, 0x00000011 }, */
-/*     { 0x28, 0, 0, 0x00000036 }, */
-/*     { 0x15, 14, 0, 0x00000050 }, */
-/*     { 0x28, 0, 0, 0x00000038 }, */
-/*     { 0x15, 12, 13, 0x00000050 }, */
-/*     { 0x15, 0, 12, 0x00000800 }, */
-/*     { 0x30, 0, 0, 0x00000017 }, */
-/*     { 0x15, 2, 0, 0x00000084 }, */
-/*     { 0x15, 1, 0, 0x00000006 }, */
-/*     { 0x15, 0, 8, 0x00000011 }, */
-/*     { 0x28, 0, 0, 0x00000014 }, */
-/*     { 0x45, 6, 0, 0x00001fff }, */
-/*     { 0xb1, 0, 0, 0x0000000e }, */
-/*     { 0x48, 0, 0, 0x0000000e }, */
-/*     { 0x15, 2, 0, 0x00000050 }, */
-/*     { 0x48, 0, 0, 0x00000010 }, */
-/*     { 0x15, 0, 1, 0x00000050 }, */
-/*     { 0x6, 0, 0, 0x00040000 }, */
-/*     { 0x6, 0, 0, 0x00000000 }, */
-/*   }; */
-
-/*   struct sock_fprog bpf = { */
-/*     .len = ARRAY_SIZE(code), */
-/*     .filter = code, */
-/*   }; */
-
-/*   fp = compile_filter((struct sock_fprog_kern*) &bpf); */
-
-/*   return 0; */
-/* } */
-
-
-
-
-
+/************************************/
+/**
+ * \fn static int compile_bpf_program(struct sock_fprog *bpf)
+ * \brief jit compile bpf bytecode
+ *
+ * \param *bpf (struct sock_fprog) bytecode
+ * \return 
+ * - 0 SUCCESS
+ * - salve exits if failed
+ */
 static int 
 compile_bpf_program(struct sock_fprog *bpf){
-
- 
   
   fp = compile_filter((struct sock_fprog_kern*) bpf);
   if (*(int*)fp < 0){
@@ -92,46 +41,42 @@ compile_bpf_program(struct sock_fprog *bpf){
   return 0;
 }
 
+#ifndef _DOXYGEN_
 /**
- * Cast hack.. bpf_pcap to bpf_linux
- **/
+ * \fn int compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf)
+ * \brief compile pcap expression to bytecode
+ * NOT USED HERE
+ * \param *pcap_bpf pointer to struct pcap_bpf_program
+ * \return 
+ * - 0 if success
+ * - exit if failed
+ */
 int  
 compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf){
 
-  /* struct pcap_bpf_program { */
-  /* 	u_int bf_len; */
-  /* 	struct bpf_insn *bf_insns; */
-  /* }; */
-  
   struct sock_fprog bpf;
   
   bpf.len = pcap_bpf->bf_len;
   bpf.filter =(struct sock_filter*) pcap_bpf->bf_insns;
-  /* struct sock_fprog bpf = { */
-  /*   .len = ARRAY_SIZE(code), */
-  /*   .filter = code, */
-  /* }; */
 
-  /* bpf.len= ARRAY_SIZE(code); */
-  /* bpf.filter = code; */
-  //compile_bpf_program(&bpf);
- 
   fp = compile_filter((struct sock_fprog_kern*) &bpf);
+
   if (*(int*)fp < 0){
     fprintf(stderr,"Error compiling BPF code\n");
     exit(1);
   }
 
-  /* fp = compile_filter((struct sock_fprog_kern*) &bpf); */
-  /* if (*(int*)fp < 0){ */
-  /*   fprintf(stderr,"Error compiling BPF code\n"); */
-  /*   exit(1); */
-  /* } */
   return 0;
 }
+#endif
 
-
-
+/**
+ * \fn static void compile_bpf_filter2(__attribute__((unused)) void)
+ * \brief static def of bytecode
+ * a configuration file should be used
+ * \param bytecode
+ * wrap bytecode into a struct sock_fprog bpf
+ */
 static void
 compile_bpf_filter2(__attribute__((unused)) void){
   /*  From : tcpdump -i eth0 port 80 -dd*/
@@ -285,29 +230,37 @@ compile_bpf_filter2(__attribute__((unused)) void){
   /*   { 0x6, 0, 0, 0x00000000 }, */
   /* }; */
   struct sock_fprog bpf;
-  /* struct sock_fprog bpf = { */
-  /*   .len = ARRAY_SIZE(code), */
-  /*   .filter = code, */
-  /* }; */
 
   bpf.len= ARRAY_SIZE(code);
   bpf.filter = code;
     compile_bpf_program(&bpf);
-  /* fp = compile_filter((struct sock_fprog_kern*) &bpf); */
-  /* if (*(int*)fp < 0){ */
-  /*   fprintf(stderr,"Error compiling BPF code\n"); */
-  /*   exit(1); */
-  /* } */
+
 }
 
 
 
+/**
+ * \fn int BPF_pkt_filter(char *pkt, uint32_t pkt_length)
+ * \brief run bpf program
+ *
+ * \param *pkt pkt pointer
+ * \param pkt_length length of packet (header + payload)
+ * \return 
+ * - -1 if match
+ * - 0 otherwise
+ */
 int 
 BPF_pkt_filter(char *pkt, uint32_t pkt_length){
   return run_filter(fp,(u_char *) pkt, pkt_length);
 }
 
 
+
+/**
+ * \fn int BPF_init(char __attribute__((unused)) *tmp){
+ * \brief bpf entry point (do nothing)
+ *
+ */
 int 
 BPF_init(char __attribute__((unused)) *tmp){
   printf("%s",subborder);

@@ -1,3 +1,12 @@
+/**
+ * \file bridge.c
+ * \brief filtering system executed by each slave
+ * \author R. Ly
+ *
+ * 
+ */
+
+
 #include "main.h"
 #include "bridge.h"
 #include "aton.h"
@@ -174,17 +183,15 @@ bridge_add_packet(struct rte_mbuf *mbuf){
   
 
 
-/**
+/*
  * Packet Filter
- **/
+ */
 static inline int
 bridge_filter(struct rte_mbuf * mbuf){
   
   struct ether_hdr *ethernet_header;
   ethernet_header = rte_pktmbuf_mtod(mbuf, struct ether_hdr *);
 
-
-  //  rte_prefetch0(&rte_pktmbuf_data_len(mbuf));//TOTO
   if (filter_engine((char*)ethernet_header,rte_pktmbuf_data_len(mbuf))== 0) {
   /* not in filter*/
     return bridge_add_packet(mbuf) ;
@@ -203,7 +210,7 @@ bridge_filter(struct rte_mbuf * mbuf){
 /***************************** main loop ********************************/
 /**
  * Main loop
- * int engine(u_char * pkt_ptr, uint32_t headeer.len)
+ * int engine(u_char * pkt_ptr, uint32_t header.len)
  **/
 
 static void 
@@ -271,9 +278,10 @@ static void
     /* } */
 
 
-    /**
+    /*
      * TX queue burst (send burst)
-     **/
+     */
+
     /* ONLY on Tx/Rx port for each proc*/
     diff_tsc = cur_tsc - prev_tsc;
     if (unlikely(diff_tsc > drain_tsc)) {
@@ -283,18 +291,17 @@ static void
       }
     }
 
-    /* /\** */
-    /*  * micrsleep */
-    /*  **\/ */
+
+    /* micro_sleep */
     /* old_tsc = rte_rdtsc(); */
     /* delta_tsc = 0; */
     /* while(delta_tsc <  test_tsc){ */
     /*   delta_tsc = rte_rdtsc() - old_tsc; */
     /* } */
 
-    /**
+    /*
      * read packets 
-     **/
+     */
     /* we receive from only one port and queue */
     pkts_received = rte_eth_rx_burst(slave_conf.port_rx,
 				     slave_conf.queue_rx,
@@ -314,7 +321,6 @@ static void
 	  port_statistics[slave_conf.conf_id].filtered += 1;
 	  port_statistics[slave_conf.conf_id].filtered_b +=
 	    rte_pktmbuf_data_len(mbuf);
-	  //TOTO
 	  rte_pktmbuf_free(mbuf);
 	} 
       }
@@ -325,10 +331,14 @@ static void
 }
 
 
-
 /**
- * Choose Engine filter
- **/
+ * \fn static int bridge_init_engine(__attribute__((unused)) void)
+ * \brief init filtering algorithm engine
+ *
+ * \return 
+ * - 0 engine loaded
+ * - -1 failed
+ */
 static int
 bridge_init_engine(__attribute__((unused)) void){
   
@@ -344,13 +354,9 @@ bridge_init_engine(__attribute__((unused)) void){
   slave_conf.queue_tx = proc_config_t->queue_tx;  
 
 
-  //  int (*init_algo)(char *);
-
-  /* engine (ptr* pkt_pointer, uint32_t pkt_length) */
   int (*engine)(char*,uint32_t);
   int (*engine1)(struct  rte_mbuf*, int32_t *ret);
   int (*engine4)(struct  rte_mbuf**, int32_t *ret);
-  //  int (*bridge_loop)((void *)());
 
   /* optimized version of bridge_loop */
   /* 0 = no */
@@ -414,39 +420,37 @@ bridge_init_engine(__attribute__((unused)) void){
 	    rte_lcore_id()); 
     return -1;
     break;
-    //    return -1; // TODO ERROR C
   }
 
-
-  //  init_algo(proc_config_t->args);
-  
   if (bridge_optimized == 0){
     bridge_main_loop(engine);
   } 
-  
-/* int (*engine4)(struct rte_mbuf*[4],int32_t*[4]), */
-/* 		      int (*engine)(struct rte_mbuf*,int32_t*)){ */
-/*     //TODO */
-/*     engine_one((struct rte_mbuf**)NULL, (int32_t**) 0); */
-/*     engine_four((struct rte_mbuf**)NULL, (int32_t**) 0); */
-/*     return 0; */
-/*     bridge_main_loop(engine); */
-
-
-
   return 0;
 }
 
 
 /***************** log    ****************/
+
 /**
- *  1 log file for each children
- **/
- 
+ * \fn static int bridge_log_init(unsigned lcore_id)
+ * \brief Fonction de création d'une nouvelle instance d'un objet Str_t.
+ *
+ * \param sz Chaîne à stocker dans l'objet Str_t, ne peut être NULL.
+ * \return Instance nouvelle allouée d'un objet de type Str_t ou NULL.
+ */
+
+/**
+ * \fn int abridge_launch_one_lcore(__attribute__((unused)) void *dummy)
+ * \brief children process main function (entry point)
+ * - flcore_id is the new lcore_id of the slave
+ * - lcore_id is the old lcore_id of the slave
+ *
+ * \return return only if slaves killed 
+ */
 static int
 bridge_log_init(unsigned lcore_id){
-
   char log_file[LOG_MAX_SIZE];
+
   snprintf(log_file,LOG_MAX_SIZE,LOG_NAME,lcore_id);
       
   bridge_log_fd = fopen(log_file,"w+");
@@ -462,13 +466,15 @@ bridge_log_init(unsigned lcore_id){
 }
 
 
-/************************* main bridge  *******************/
+/************************* Slave bridge  *******************/
 /**
- * We are in the children processus 
- * In this function :
- *   flcore_id should be the new_id
- *   lcore_id the old_id
- **/
+ * \fn int bridge_launch_one_lcore(__attribute__((unused)) void *dummy)
+ * \brief children process main function (entry point)
+ * - flcore_id is the new lcore_id of the slave
+ * - lcore_id is the old lcore_id of the slave
+ *
+ * \return return only if slaves killed 
+ */
 int
 bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
   unsigned lcore_id = rte_lcore_id();
@@ -513,7 +519,7 @@ bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
 
   struct bridge_msg_s msg2send;
   struct bridge_msg_s msg2recv;
-  memset(&msg2send,0,sizeof(struct bridge_msg_s));
+  memsbridge_launch_one_lcore(__attribute__((unused)) void *dummy)et(&msg2send,0,sizeof(struct bridge_msg_s));
   msg2send.cmd = CFG;
   RTE_LOG(DEBUG,BRIDGE,"SLAVE %d send request message cfg\n",flcore_id);
 
@@ -531,16 +537,16 @@ bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
     
     port_statistics[slave_conf.conf_id].pid = getpid();
 
-    RTE_LOG(INFO,BRIDGE,"SLAVE %d Entering loop with conf %d\n",
+    R TE_LOG(INFO,BRIDGE,"SLAVE %d Entering loop with conf %d\n",
 	    flcore_id,slave_conf.conf_id);
     print_proc_config(slave_conf.conf_id);
     
     
-    /**
+    /*
      *
      * SLAVE LOOP
      *
-     **/
+     */
     retval = bridge_init_engine(); /* loop */
 
   }

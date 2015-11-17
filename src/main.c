@@ -29,7 +29,12 @@
  * see intel 82599 controller ref p. 284
  */
 
-
+/**
+ * \struct rte_eth_conf_port_default
+ * \brief nic configuration structure
+ *
+ * configuration
+ */
 static struct rte_eth_conf port_conf_default = {
   .rxmode = { .max_rx_pkt_len = 9000,//ETHER_MAX_LEN  ,/* Only used if jumbo 
 	      //   frame enabled */
@@ -102,7 +107,12 @@ check_all_ports_link_status(uint8_t port_num, uint32_t port_mask){
       if ((port_mask & (1 << portid)) == 0){
 	continue;
       }
-      memset(&link, 0, sizeof(link));
+      /**                                                                                                                                                                                                                
+       * \struct rte_eth_conf_port_default                                                                                                                                                                               
+       * \brief nic configuration structure                                                                                                                                                                              
+       *                                                                                                                                                                                                                 
+       * configuration                                                                                                                                                                                                   
+       */   memset(&link, 0, sizeof(link));
       rte_eth_link_get_nowait(portid, &link);
       /* print link status if flag set */
       if (print_flag == 1) {
@@ -146,7 +156,12 @@ check_all_ports_link_status(uint8_t port_num, uint32_t port_mask){
 
 
 /***************************** Port initilisation *****************************/
-/*
+/*/**                                                                                                                                                                                                                
+ * \struct rte_eth_conf_port_default                                                                                                                                                                               
+ * \brief nic configuration structure                                                                                                                                                                              
+ *                                                                                                                                                                                                                 
+ * configuration                                                                                                                                                                                                   
+ */  
  * Initialize a given port using global settings and with the RX buffers
  * coming from the mbuf_pool passed as a parameter.
  */
@@ -178,7 +193,12 @@ port_init(uint8_t port_id, struct rte_mempool *mbuf_pool){
   tx_rings = port_qconf->queue_tx_nb;
 
   printf("%s %s\n",indentation,singleborder);
-  printf("%s Configure eth device\n",indentation);
+  printf("%s Con/**                                                                                                                                                                                                                
+ * \struct rte_eth_conf_port_default                                                                                                                                                                               
+ * \brief nic configuration structure                                                                                                                                                                              
+ *                                                                                                                                                                                                                 
+ * configuration                                                                                                                                                                                                   
+ */  figure eth device\n",indentation);
   return_value = rte_eth_dev_configure(port_id, rx_rings, tx_rings, &port_conf);
   if (return_value != 0){
     RTE_LOG(CRIT, PORT, "rte_eth_dev_configure error %i (%s)\n", 
@@ -272,7 +292,7 @@ port_init(uint8_t port_id, struct rte_mempool *mbuf_pool){
 /******************************** #stats  ******************************/
 /**
  * from dpdk, stats
- **/
+ */
 void print_stats(__attribute__((unused)) void) {
   uint64_t total_packets_dropped, total_packets_tx, 
     total_packets_rx, total_packets_filtered;
@@ -677,21 +697,17 @@ main_loop(__attribute__((unused)) void){
 
 
 
-/******************************** Main *************************************/
+/****************************** Main *************************************/
 /*
  */
 int main(int argc, char **argv){
   int return_value;
 
-  uint8_t port_id;//, last_port; TODO REMOVE
-
+  uint8_t port_id;
   uint8_t nb_ports;
   uint8_t nb_ports_available;
 
   struct lcore_resource_s* lcore_res;
-  //  struct proc_config_s *proc_cfg;
- 
-  //  enum rte_proc_type_t proc_type; //TODO
 
   unsigned mempool_flags;
 
@@ -1066,6 +1082,7 @@ int main(int argc, char **argv){
 			NULL,
 			SKIP_MASTER);
   
+  // old way to launc lcores
   // unsigned lcore_id;
   /* RTE_LCORE_FOREACH_SLAVE(lcore_id) { */
   /*   /\* if(rte_eal_remote_launch(lcore_bridge,NULL, lcore_id) != 0){ *\/ */

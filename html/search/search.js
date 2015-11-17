@@ -7,11 +7,12 @@
 
 var indexSectionsWithContent =
 {
-  0: "_abcefilmps",
-  1: "_bceilmps",
-  2: "m",
-  3: "mp",
-  4: "afp"
+  0: "_abcefilmprsw",
+  1: "_bceilmprs",
+  2: "bem",
+  3: "bclmpw",
+  4: "afps",
+  5: "e"
 };
 
 var indexSectionNames =
@@ -20,7 +21,8 @@ var indexSectionNames =
   1: "classes",
   2: "files",
   3: "functions",
-  4: "variables"
+  4: "variables",
+  5: "defines"
 };
 
 function convertToId(search)
