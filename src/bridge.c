@@ -519,7 +519,7 @@ bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
 
   struct bridge_msg_s msg2send;
   struct bridge_msg_s msg2recv;
-  memsbridge_launch_one_lcore(__attribute__((unused)) void *dummy)et(&msg2send,0,sizeof(struct bridge_msg_s));
+  memset(&msg2send,0,sizeof(struct bridge_msg_s));
   msg2send.cmd = CFG;
   RTE_LOG(DEBUG,BRIDGE,"SLAVE %d send request message cfg\n",flcore_id);
 
@@ -537,11 +537,10 @@ bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
     
     port_statistics[slave_conf.conf_id].pid = getpid();
 
-    R TE_LOG(INFO,BRIDGE,"SLAVE %d Entering loop with conf %d\n",
+    RTE_LOG(INFO,BRIDGE,"SLAVE %d Entering loop with conf %d\n",
 	    flcore_id,slave_conf.conf_id);
     print_proc_config(slave_conf.conf_id);
-    
-    
+ 
     /*
      *
      * SLAVE LOOP
