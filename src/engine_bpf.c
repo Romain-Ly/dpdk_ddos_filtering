@@ -41,17 +41,17 @@ compile_bpf_program(struct sock_fprog *bpf){
   return 0;
 }
 
-#ifndef _DOXYGEN_
+
 /**
  * \fn int compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf)
  * \brief compile pcap expression to bytecode
- * NOT USED HERE
+ * 
  * \param *pcap_bpf pointer to struct pcap_bpf_program
- * \return 
+ * \return
  * - 0 if success
  * - exit if failed
  */
-int  
+int
 compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf){
 
   struct sock_fprog bpf;
@@ -68,7 +68,7 @@ compile_pcap_bpf_program(struct pcap_bpf_program *pcap_bpf){
 
   return 0;
 }
-#endif
+
 
 /**
  * \fn static void compile_bpf_filter2(__attribute__((unused)) void)

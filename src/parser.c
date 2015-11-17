@@ -1,3 +1,12 @@
+/**
+ * \file parser.c
+ * \brief ddos parser
+ * \author R. Ly
+ * 
+ */
+
+
+
 #include "main.h"
 #include "parser.h"
 #include "debug.h"

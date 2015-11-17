@@ -19,11 +19,10 @@
 #include "engine_misc.h"
 #include "engine_hash.h"
 #include "bridge_optimized.h"
-
 #include "debug.h"
 
 
-/*************************** Static definitions ******************************/
+/*************************** ******************************/
 /* mask of enabled ports */
 static uint32_t main_enabled_port_mask = 0;
 
@@ -32,20 +31,25 @@ static uint8_t port_nb = 0;
 
 /* Timer */
 //static int64_t timer_period = 10 * TIMER_MILLISECOND * 1000; 
-/* default period is 10 seconds */
 
-/* log*/
+/* log file*/
 static FILE *bridge_log_fd;
+
+/* local slave variables */
+static struct slave_conf_s slave_conf;
+static int my_core_id;
 
 
 /******** Design ********/
 static const char *border = "==============================";
+/* not used */
 //static const char *singleborder = "----------------------------";
 //static const char *indentation = "    ";
 //static const char *warning_border = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 
 /**
- * Engine 
+ *
+ * Engine algorithm (lookup)
  *
  **/
 #define ENGINE_MAX_SIZE 32
@@ -73,25 +77,14 @@ static engine_t engine_lookup[] = {
 
 #define ENGINE_NKEYS (sizeof(engine_lookup)/sizeof(engine_t))
 
+
 static int (*filter_engine)(char*,uint32_t);
 
 
 /**
- * Datapath struct
- * Packets
- **/
-//#define MAX_PKT_BURST 64
-
-
-
-/*local conf*/
-static struct slave_conf_s slave_conf;
-
-
-static int my_core_id;
-
-/****************** Engine functions *************************/
-
+ * \fn static int string2key(char *key)
+ * \brief lookup : from string, get key.
+ */
 static int
 string2key(char *key){
   unsigned i;
@@ -103,31 +96,40 @@ string2key(char *key){
   }//endfor
   return ENGINE_ERROR;
 }
+/****************** Engine functions *************************/
 
 
 /**
- * Forward packets
- * may be not optimized by this way ...
- **/
+ * \fn static inline int l2fwd(__attribute__((unused)) char *pkt,__attribute__((unused)) uint32_t pkt_length)
+ * \brief do nothing = accept all packets
+ */
 static inline int
 l2fwd(__attribute__((unused)) char *pkt,
       __attribute__((unused)) uint32_t pkt_length){
   return 0; 
 }
 
-
+/**
+ * \fn static inline int l2fwd_init(char __attribute__((unused)) *dummy)
+ * \brief do nothing
+ */
 static inline int
 l2fwd_init(char __attribute__((unused)) *dummy){
   return 0;
 }
 
 
-/***************************** ACL ********************************/
+/************************** functions *****************************/
+
 
 
 /**
- * Send packets
- **/
+ * \fn static int bridge_send_burst(unsigned pkts_nb)
+ * \brief 
+ * send all packets 
+ * 
+ * update stats
+ */
 static int
 bridge_send_burst(unsigned pkts_nb){
 
@@ -145,7 +147,6 @@ bridge_send_burst(unsigned pkts_nb){
   if (unlikely(return_value < pkts_nb)) { 
     port_statistics[slave_conf.conf_id].dropped += (pkts_nb - return_value); 
     while (return_value < pkts_nb) { 
-      //TOTO
       port_statistics[slave_conf.conf_id].dropped_b += 
       	rte_pktmbuf_data_len(mbuf_table[return_value]);
       rte_pktmbuf_free(mbuf_table[return_value]); 
@@ -158,9 +159,15 @@ bridge_send_burst(unsigned pkts_nb){
 
 
 
+
 /**
- * Add a packet to the array and send it if full
- **/
+ * \fn static int bridge_add_packet(struct rte_mbuf *mbuf)
+ * \brief 
+ * add packet to array of pkts to send
+ *
+ * send all packets if array = full
+ * otherwise dot nothing
+ */
 static int
 bridge_add_packet(struct rte_mbuf *mbuf){
   unsigned pkts_nb;
@@ -182,9 +189,16 @@ bridge_add_packet(struct rte_mbuf *mbuf){
 }
   
 
-
-/*
- * Packet Filter
+/**
+ * \fn static inline int bridge_filter(struct rte_mbuf * mbuf)
+ * \brief 
+ * - exec engine callback fct()
+ *  - ==0 -> add packet to array of pkts to send 
+ *  - ==1 -> filter packet
+ *
+ * \return 
+ * - 0 -> reloop again
+ * - -1 -> need to free buffer
  */
 static inline int
 bridge_filter(struct rte_mbuf * mbuf){
@@ -205,14 +219,16 @@ bridge_filter(struct rte_mbuf * mbuf){
 
 
 
-
-
-/***************************** main loop ********************************/
+/************************** Bridge main functions  *************************/
 /**
- * Main loop
- * int engine(u_char * pkt_ptr, uint32_t header.len)
- **/
-
+ * \fn static static void  bridge_main_loop(int (*engine)(char*,uint32_t))
+ * \brief 
+ * - DPDK main loop
+ * - Receive, process and send packets
+ *
+ * \param int (*engine)(char*,uint32_t) filtering algorithm 
+ * 
+ */
 static void 
   bridge_main_loop(int (*engine)(char*,uint32_t)){
   struct rte_mbuf *packets_burst[MAX_PKT_BURST];
@@ -221,11 +237,12 @@ static void
   uint64_t prev_tsc, diff_tsc, cur_tsc;
   
   const uint64_t drain_tsc = (rte_get_tsc_hz() + US_PER_S - 1) 
-    / US_PER_S * BURST_TX_DRAIN_US;//TODO make a comment on that
+    / US_PER_S * BURST_TX_DRAIN_US;
   prev_tsc = 0;
  
- /* uint64_t old_tsc, delta_tsc; */
- /*  const uint64_t test_tsc = drain_tsc /2000; */
+  /* workaroud microsleep  */
+  /* uint64_t old_tsc, delta_tsc; */
+  /*  const uint64_t test_tsc = drain_tsc /2000; */
 
   unsigned lcore_id;
   uint8_t j;
@@ -249,14 +266,14 @@ static void
   RTE_LOG(INFO, BRIDGE, "Transmitting on port %u, queue %u\n", 
 	  slave_conf.port_tx,slave_conf.queue_tx);
 
-  /**
+  /*
    *
    * LOOP
+   * packet
+   * Datapath
    *
-   * Datapth here
    *
-   *
-   **/
+   */
   while (1){
 
 
@@ -264,10 +281,9 @@ static void
   
     cur_tsc = rte_rdtsc(); //timestamp counter
    
-
-    /* /\** */
-    /*  * STOP message */
-    /*  **\/ */
+    /*
+     * get_cmd fct in datapath hinders perf 
+     */
     /* if (unlikely(get_cmd(lcore_id, &msg, I_AM_SLAVE) == 0)) { */
     /*   send_cmd(lcore_id, &msg, 0); */
 
@@ -292,7 +308,9 @@ static void
     }
 
 
-    /* micro_sleep */
+    /*
+     *  micro_sleep  workaround (not useful)
+     */
     /* old_tsc = rte_rdtsc(); */
     /* delta_tsc = 0; */
     /* while(delta_tsc <  test_tsc){ */
@@ -302,7 +320,6 @@ static void
     /*
      * read packets 
      */
-    /* we receive from only one port and queue */
     pkts_received = rte_eth_rx_burst(slave_conf.port_rx,
 				     slave_conf.queue_rx,
 				     packets_burst,
@@ -333,7 +350,9 @@ static void
 
 /**
  * \fn static int bridge_init_engine(__attribute__((unused)) void)
- * \brief init filtering algorithm engine
+ * \brief 
+ * - init filtering algorithm engine
+ * - set callback function (engine)
  *
  * \return 
  * - 0 engine loaded
@@ -358,11 +377,14 @@ bridge_init_engine(__attribute__((unused)) void){
   int (*engine1)(struct  rte_mbuf*, int32_t *ret);
   int (*engine4)(struct  rte_mbuf**, int32_t *ret);
 
-  /* optimized version of bridge_loop */
+  /* used optimized version of bridge_loop */
   /* 0 = no */
   /* 1 = yes */
   int bridge_optimized = 0;
   
+  /*
+   *  Init chosen engine
+   */
   switch (string2key(proc_config_t->engine)){
   case ENGINE_DEFAULT:
     printf("/%s%s/",border,border);
@@ -374,7 +396,7 @@ bridge_init_engine(__attribute__((unused)) void){
   case ENGINE_BPF:
     printf("/%s%s/\n",border,border);
     printf("BPF ENGINE\n");
-    //    init_algo = &BPF_init;
+    //  init_algo = &BPF_init;
     BPF_init(proc_config_t->args);
     engine = &BPF_pkt_filter;
     break;
@@ -433,19 +455,14 @@ bridge_init_engine(__attribute__((unused)) void){
 
 /**
  * \fn static int bridge_log_init(unsigned lcore_id)
- * \brief Fonction de création d'une nouvelle instance d'un objet Str_t.
+ * \brief create a specific log file for each slave
  *
- * \param sz Chaîne à stocker dans l'objet Str_t, ne peut être NULL.
- * \return Instance nouvelle allouée d'un objet de type Str_t ou NULL.
- */
-
-/**
- * \fn int abridge_launch_one_lcore(__attribute__((unused)) void *dummy)
- * \brief children process main function (entry point)
- * - flcore_id is the new lcore_id of the slave
- * - lcore_id is the old lcore_id of the slave
- *
- * \return return only if slaves killed 
+ * TODO : better naming
+ * \param lcore_id name suffix of log file
+ * 
+ * \return 
+ * - 0 ok
+ * - -1 bad
  */
 static int
 bridge_log_init(unsigned lcore_id){
@@ -549,12 +566,16 @@ bridge_launch_one_lcore(__attribute__((unused)) void *dummy){
     retval = bridge_init_engine(); /* loop */
 
   }
+  /*
+   * Slave leaves here for some reasons
+   */
+
   RTE_LOG(INFO,BRIDGE,"SLAVE %d end\n",flcore_id);
 
 
   /* return lcore_id before return */
   if (main_information.float_proc) {
-     /* remove lcore_id from used id so we can used it again */
+    /* remove lcore_id from used id */
     flib_free_lcore_id(rte_lcore_id());
     mapping_id[lcore_id] = INVALID_MAPPING_ID;
     

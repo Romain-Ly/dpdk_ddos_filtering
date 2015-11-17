@@ -7,11 +7,11 @@
 
 var indexSectionsWithContent =
 {
-  0: "_abcefilmprsw",
-  1: "_bceilmprs",
+  0: "_abcefilmpsw",
+  1: "_bceilmps",
   2: "bem",
-  3: "bclmpw",
-  4: "afps",
+  3: "bclmpsw",
+  4: "afp",
   5: "e"
 };
 
